@@ -23,11 +23,12 @@ class AddContact():
         ContactsArray.append(self)
         NameArray.append(self.Name)
     def deleteContact(self):
+        NameArray.remove(self.Name)
         ContactsArray.remove(self)
     
 sg.theme('DarkAmber')  
-One = AddContact("Herman Smith  ", "123-456-7891", "coolEmail@email.com")
-Two = AddContact("John Doe", "212-333-8267", "coolEmail@email.com")
+One = AddContact("Herman Smith  ", "1234567891", "coolEmail@email.com")
+Two = AddContact("John Doe", "2123338267", "coolEmail@email.com")
 
 def EditContact(Contact):
     layout = [[sg.Text('Edit contact Name:'), sg.InputText()],
@@ -42,9 +43,7 @@ def EditContact(Contact):
             Open_SpecificContact(Contact)
             break
         elif event == "Submit":
-
             Contact.updateContact(values[0], values[1], values[2])
-
             window.close()
             open_ContactList()
             break
@@ -52,12 +51,13 @@ def EditContact(Contact):
         
 
 def Open_SpecificContact(ContactInfo):
+    Number = formatNumber(ContactInfo.Number)
     layout = [
         [sg.Text("Contacts")],
         [sg.Text(f'Name: {ContactInfo.Name}')],
-        [sg.Text(f'Phone Number: {ContactInfo.Number}')],
+        [sg.Text(f'Phone Number: {Number}')],
         [sg.Text(f'Email: {ContactInfo.Email}')],
-        [sg.Button("Back"), sg.Button("Edit Contact")]
+        [sg.Button("Back"), sg.Button("Edit Contact"), sg.Button("Delete Contact")]
     ]
     window = sg.Window('Contact', layout)
     while True:
@@ -70,11 +70,19 @@ def Open_SpecificContact(ContactInfo):
             window.close()
             EditContact(ContactInfo)
             break
+        elif event == "Delete Contact":
+            ContactInfo.deleteContact()
+            window.close()
+            open_ContactList()
+            break
     window.close()
 
+def formatNumber(Number):
+    formattedNum = (f'{Number[0:3]}-{Number[3:6]}-{Number[6:10]}')
+    return formattedNum
+
+
 def open_ContactList():
-    for i in range(0, len(ContactsArray)):
-        print(ContactsArray[i].Name)
     layout1 = [
         [sg.Text("Your Contacts:")],
         [sg.Button(text) for text in NameArray],
