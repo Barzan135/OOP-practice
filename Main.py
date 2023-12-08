@@ -9,11 +9,25 @@ class AddContact():
         self.Email = Email 
         ContactsArray.append(self)
         NameArray.append(Name)
+    def updateContact(self, Name, Number, Email):
+        ContactsArray.remove(self)
+        NameArray.remove(self.Name)
+        
+        if len(Name) != 0: 
+            self.Name = Name
+        if len(str(Number)) != 0: 
+            self.Number = Number
+        if len(Email) != 0:
+            self.Email = Email or self.Email
 
-
+        ContactsArray.append(self)
+        NameArray.append(self.Name)
+    def deleteContact(self):
+        ContactsArray.remove(self)
+    
 sg.theme('DarkAmber')  
-One = AddContact("Random Random", "778-917-2994", "Barzans@outlook.com")
-Two = AddContact("Random Again", "604-583-4498", "random@outlook.com")
+One = AddContact("Herman Smith  ", "123-456-7891", "coolEmail@email.com")
+Two = AddContact("John Doe", "212-333-8267", "coolEmail@email.com")
 
 def EditContact(Contact):
     layout = [[sg.Text('Edit contact Name:'), sg.InputText()],
@@ -28,10 +42,9 @@ def EditContact(Contact):
             Open_SpecificContact(Contact)
             break
         elif event == "Submit":
-            Contact.Name = values[0]
-            Contact.Number = values[1]
-            Contact.Email = values[2]
-            print(Contact)
+
+            Contact.updateContact(values[0], values[1], values[2])
+
             window.close()
             open_ContactList()
             break
@@ -60,8 +73,8 @@ def Open_SpecificContact(ContactInfo):
     window.close()
 
 def open_ContactList():
-    for i in range(0, len(NameArray)):
-        print(NameArray[i])
+    for i in range(0, len(ContactsArray)):
+        print(ContactsArray[i].Name)
     layout1 = [
         [sg.Text("Your Contacts:")],
         [sg.Button(text) for text in NameArray],
